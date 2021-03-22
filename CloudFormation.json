@@ -42,11 +42,11 @@
                 }
             }
         },
-        "Function": {
+        "FunctionSet": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "FunctionName": "PetLambda-Set",
-                "Handler": "index.handler",
+                "Handler": "index.lambda_handler",
                 "Runtime": "python3.7",
                 "Code": {
                     "ZipFile": "import json\ndef handler(event, context) :\n  print(\"Event: %s\" % json.dumps(event))\n"
@@ -63,11 +63,11 @@
                 "LambdaExecutionRole"
             ]
         },
-        "Function": {
+        "FunctionGet": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "FunctionName": "PetLambda-Get",
-                "Handler": "index.handler",
+                "Handler": "index.lambda_handler",
                 "Runtime": "python3.7",
                 "Code": {
                     "ZipFile": "import json\ndef handler(event, context) :\n  print(\"Event: %s\" % json.dumps(event))\n"
