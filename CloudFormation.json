@@ -1,0 +1,143 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Template To Create a DynamoDB with Lambda Role",
+    "Parameters": {
+        "HashKeyElementName": {
+            "Type": "String",
+            "Default": "id",
+            "Description": "Hash Key Name"
+        },
+        "HashKeyElementType": {
+            "Type": "String",
+            "Default": "S",
+            "Description": "Hash Key Type"
+        }
+    },
+    "Resources": {
+        "DynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "Pets",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "HashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "HashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "HashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                }
+            }
+        },
+        "Function": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "PetLambda-Set",
+                "Handler": "index.handler",
+                "Runtime": "python3.7",
+                "Code": {
+                    "ZipFile": "import json\ndef handler(event, context) :\n  print(\"Event: %s\" % json.dumps(event))\n"
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaExecutionRole",
+                        "Arn"
+                    ]
+                },
+                "Timeout": "30"
+            },
+            "DependsOn": [
+                "LambdaExecutionRole"
+            ]
+        },
+        "Function": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "PetLambda-Get",
+                "Handler": "index.handler",
+                "Runtime": "python3.7",
+                "Code": {
+                    "ZipFile": "import json\ndef handler(event, context) :\n  print(\"Event: %s\" % json.dumps(event))\n"
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaExecutionRole",
+                        "Arn"
+                    ]
+                },
+                "Timeout": "30"
+            },
+            "DependsOn": [
+                "LambdaExecutionRole"
+            ]
+        },
+        "LambdaExecutionRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "Policies": [
+                    {
+                        "PolicyName": "LambdaPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Resource": [
+                                        "arn:aws:logs:*:*:*"
+                                    ],
+                                    "Effect": "Allow"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Resource": {
+                                        "Fn::GetAtt": [
+                                            "DynamoDBTable",
+                                            "Arn"
+                                        ]
+                                    },
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

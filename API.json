@@ -36,7 +36,7 @@
         ],
         "summary": "Find pet by ID",
         "description": "Returns the matching pet object",
-        "operationId": "searchInventory",
+        "operationId": "findPet",
         "parameters": [
           {
             "name": "id",
@@ -73,7 +73,7 @@
         "tags": [
           "developers"
         ],
-        "summary": "adds a pet with form data",
+        "summary": "Adds a pet with form data",
         "description": "Adds an pet object to the system",
         "operationId": "addPet",
         "requestBody": {
@@ -87,8 +87,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "item created"
+          "200": {
+            "description": "Pet object created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
           },
           "400": {
             "description": "invalid input, object invalid"
@@ -107,17 +114,11 @@
           "birthday",
           "breed",
           "gender",
-          "id",
           "name",
           "owner"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          },
           "name": {
             "type": "string",
             "example": "Hansie"
