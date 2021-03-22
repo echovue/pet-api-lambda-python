@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pets API",
+    "description": "This API supports the creation and retrieval of a Pet Object.",
+    "contact": {
+      "email": "mike@echovue.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/echovue/Pets/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/pet": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Find pet by ID",
+        "description": "Returns the matching pet object",
+        "operationId": "searchInventory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the pet to return",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pet object matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "adds a pet with form data",
+        "description": "Adds an pet object to the system",
+        "operationId": "addPet",
+        "requestBody": {
+          "description": "Pet to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "item created"
+          },
+          "400": {
+            "description": "invalid input, object invalid"
+          },
+          "409": {
+            "description": "an existing pet already exists"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "required": [
+          "birthday",
+          "breed",
+          "gender",
+          "id",
+          "name",
+          "owner"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Hansie"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Dachshund"
+          },
+          "gender": {
+            "type": "string",
+            "example": "Male"
+          },
+          "owner": {
+            "type": "string",
+            "example": "Mike"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "example": "2012-05-15"
+          }
+        }
+      }
+    }
+  }
+}
