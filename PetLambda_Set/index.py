@@ -1,10 +1,9 @@
 import boto3
-import json
 
 def lambda_handler(event, context):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Pets')
-    response = table.put_item(
+    ddbClient = boto3.resource('dynamodb')
+    ddbTable = ddbClient.Table('Pets')
+    response = ddbTable.put_item(
         Item={
             'id': event['id'],
             'name': event['name'],
@@ -15,6 +14,6 @@ def lambda_handler(event, context):
         }
     )
     return {
-        'statusCode': 200,
-        'body': json.dumps(response)
+        'statusCode': response['ResponseMetadata']['HTTPStatusCode'],
+        'body': 'Record ' + event['id'] + ' Added'
     }

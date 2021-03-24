@@ -57,7 +57,7 @@
                         "Arn"
                     ]
                 },
-                "Timeout": "30"
+                "Timeout": "2"
             },
             "DependsOn": [
                 "LambdaExecutionRole"
@@ -78,7 +78,7 @@
                         "Arn"
                     ]
                 },
-                "Timeout": "30"
+                "Timeout": "2"
             },
             "DependsOn": [
                 "LambdaExecutionRole"
